@@ -1,14 +1,16 @@
 import React, {useState, useEffect} from 'react'
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom'
 import Home from './components/Home'
 import Account from './components/Account'
 import { ThemeProvider, CircularProgress, Box } from '@mui/material'
 import createMuiTheme from './theme'
 import { auth } from './firebase'
+import LinkRedirect from './components/LinkRedirect'
 
 const App = () => {
   const [user, setUser]=useState(null);
-  const [initialLoad, setInitialLoad] = useState(true)
+  const {pathname}=useLocation()
+  const [initialLoad, setInitialLoad] = useState(pathname === '/' || pathname === '/account'? true: false)
 
   useEffect(()=>{
     auth.onAuthStateChanged((user)=>{
@@ -22,15 +24,14 @@ const App = () => {
       <CircularProgress />
     </Box>
   )
-  
+
   return (
     <ThemeProvider theme={createMuiTheme}>
-      <Router>
           <Routes>
             <Route path="/" element={user? <Navigate to="/account" /> :<Home />}/> 
-            <Route path="/account" element={user? <Account /> : <Navigate to="/" />}/> 
+            <Route path="/account" element={user? <Account /> : <Navigate to="/" />}/>
+            <Route path="/:shortCode" element={<LinkRedirect />}/> 
           </Routes>
-      </Router>
     </ThemeProvider>
   )
 }
