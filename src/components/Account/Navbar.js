@@ -1,7 +1,7 @@
 import React from 'react'
 import { Typography, AppBar, Toolbar, Button, Box } from '@mui/material'
 
-export const Navbar = () => {
+const Navbar = () => {
   return (
     <AppBar elevation={0} position='static' color='secondary'>
     <Toolbar>
@@ -14,3 +14,5 @@ export const Navbar = () => {
   </AppBar>
   )
 }
+
+export default Navbar

@@ -1,8 +1,9 @@
-import app from 'firebase/app';
-import 'firebase/firestore'
-import 'firebase/auth'
+import app from 'firebase/compat/app';
+import 'firebase/compat/firestore'
+import 'firebase/compat/auth'
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
 var firebaseConfig = {
   apiKey: "AIzaSyCzoLKTKwt5_FZokCn9rBfQXCpSLsRCvjk",
   authDomain: "url-shortener-14581.firebaseapp.com",
@@ -18,4 +19,9 @@ var firebaseConfig = {
   const firestore=firebase.firestore();
   const auth=firebase.auth();
 
-  export {firebase, firestore, auth}
+  if(process.env.NODE_ENV==='development'){
+    firestore.useEmulator('localhost',8080);
+    auth.useEmulator('http://127.0.0.1:9099')
+  }
+
+  export {firebase, firestore, auth, app}
