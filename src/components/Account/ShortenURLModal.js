@@ -1,12 +1,14 @@
 import React, {useState} from 'react'
 import {Dialog, DialogTitle, DialogContent, DialogActions, Box, Button, TextField, IconButton, CircularProgress} from '@mui/material'
 import {Close as CloseIcon} from '@mui/icons-material'
+import { firestore } from '../../firebase';
 
 const ShortenURLModal = ({handleClose, createShortenLink}) => {
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({
         name:"",
         longUrl:"",
+        customUrl:""
     })
     const [form, setForm]=useState({
         name: '',
@@ -34,6 +36,13 @@ const ShortenURLModal = ({handleClose, createShortenLink}) => {
 
         if(!regex.test(tLongUrl)){
             errors.longUrl = 'Invalid Long URL'
+        }
+
+        if(tCustomUrl.length>0){
+            const linkDoc = await firestore.collection("links").doc(tCustomUrl).get();
+            if(linkDoc.exists){
+                errors.customUrl='Custom URL already exists. Try something else!!!'
+            }
         }
 
         if(!!Object.keys(errors).length > 0){
@@ -69,7 +78,7 @@ const ShortenURLModal = ({handleClose, createShortenLink}) => {
                 <TextField error={!!errors.longUrl} helperText={errors.longUrl}
                 value={form.longUrl} name="longUrl" onChange={handleChange} fullWidth variant="filled" label="Long URL"/>
             </Box>
-            <TextField value={form.customUrl} name="customUrl" onChange={handleChange} fullWidth variant="filled" label="Custom URL (optional)"/>
+            <TextField error={!!errors.customUrl} helperText={errors.customUrl} value={form.customUrl} name="customUrl" onChange={handleChange} fullWidth variant="filled" label="Custom URL (optional)"/>
         </DialogContent>
         <DialogActions>
             <Box mr={2} my={1}>

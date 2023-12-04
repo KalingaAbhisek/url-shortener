@@ -22,7 +22,7 @@ const LinkCard = ({id, createdAt, name, longUrl, shortCode, totalClicks, deleteL
                 <Box mx={2}>
                     <Button onClick={()=>copyLink(shortUrl)}color="primary" size="small" variant="outlined">Copy</Button>
                 </Box>
-                <Button onClick={()=>deleteLink(id)} color="error" size="small" variant="outlined" disableElevation>Delete</Button>
+                <Button onClick={()=>deleteLink(id, shortCode)} color="error" size="small" variant="outlined" disableElevation>Delete</Button>
             </Box>
         </Box>
         <Box>
