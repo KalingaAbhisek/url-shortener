@@ -22,18 +22,18 @@ admin.initializeApp();
 //   response.send("Hello from Firebase!");
 // });
 
-exports.linkCreated = functions.firestore.document('users/{userId}/links/{linkId}').onCreate((snapshot, context)=>{
+exports.linkCreated = functions.firestore.document("users/{userId}/links/{linkId}").onCreate((snapshot, context)=>{
     const {userId, linkId} = context.params
     const {longUrl, shortCode} = snapshot.data();
 
     return admin.firestore().doc(`links/${shortCode}`).set({
         userId,
-        linkId: linkId,
+        linkId,
         longUrl
     })
 });
 
-exports.linkDeleted =  functions.firestore.document('users/{userId}/links/{linkId}').onDelete((snapshot, context) => {
+exports.linkDeleted =  functions.firestore.document("users/{userId}/links/{linkId}").onDelete((snapshot, context) => {
     const {shortCode} = snapshot.data();
 
     return admin.firestore().doc(`links/${shortCode}`).delete();

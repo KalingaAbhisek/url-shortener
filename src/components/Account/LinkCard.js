@@ -7,13 +7,13 @@ const LinkCard = ({id, createdAt, name, longUrl, shortCode, totalClicks, deleteL
     const shortUrl = `${window.location.host}/${shortCode}`;
   return (
     <Box display='flex' justifyContent='space-between' alignItems='center'>
-        <Box>
+        <Box width='50%'>
             <Typography color="textSecondary" variant='overline'>
                 Created at {format(createdAt,'dd MMM Y, HH:mm')}
             </Typography>
             <Box my={2}>
             <Typography style={{ marginBottom: "5px" }} variant="h5">{name}</Typography>
-            <Typography>{longUrl}</Typography>
+            <Typography style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>{longUrl}</Typography>
             </Box>
             <Box display='flex' alignItems='center'>
                 <Box mr={3}>

@@ -8,10 +8,10 @@ const LinkRedirect = () => {
     const [loading, setLoading] = useState(true);
     useEffect(()=>{
         const fetchLinkDoc = async ()=>{
-            const linkDoc = await firestore.collection('links').doc(shortCode).get();
+            const linkDoc = await firestore.collection("links").doc(shortCode).get();
             if(linkDoc.exists) {
                 const {longUrl, linkId, userId} = linkDoc.data();
-                await firestore.collection('users').doc(userId).collection('links').doc(linkId).update({totalClicks: app.firestore.FieldValue.increment(1)})
+                await firestore.collection("users").doc(userId).collection("links").doc(linkId).update({totalClicks: app.firestore.FieldValue.increment(1)})
                 window.location.href = longUrl
             }
             else{
@@ -32,7 +32,7 @@ const LinkRedirect = () => {
     else{
         return(
             <Box mt={10} textAlign='center'>
-                Link is invalid
+                <Typography>Link is invalid</Typography>
             </Box>
         )
     }

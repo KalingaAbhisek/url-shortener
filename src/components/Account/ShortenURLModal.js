@@ -1,12 +1,17 @@
 import React, {useState} from 'react'
-import {Dialog, DialogTitle, DialogContent, DialogActions, Box, Button, TextField, IconButton} from '@mui/material'
+import {Dialog, DialogTitle, DialogContent, DialogActions, Box, Button, TextField, IconButton, CircularProgress} from '@mui/material'
 import {Close as CloseIcon} from '@mui/icons-material'
 
 const ShortenURLModal = ({handleClose, createShortenLink}) => {
+    const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({
+        name:"",
+        longUrl:"",
+    })
     const [form, setForm]=useState({
         name: '',
         longUrl: '',
-        customUrl: ''
+        customUrl: '',
     })
 
     const handleChange = event => setForm(oldForm=>({
@@ -14,8 +19,34 @@ const ShortenURLModal = ({handleClose, createShortenLink}) => {
         [event.target.name]: event.target.value
       }))
     
-    const handleSubmit=()=>{
-        createShortenLink(form.name, form.longUrl, form.customUrl)
+    const handleSubmit= async ()=>{
+        const errors = {}
+        const tName = form.name.trim();
+        const tLongUrl = form.longUrl.trim();
+        const tCustomUrl = form.customUrl.trim();
+        const expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi
+
+        const regex = new RegExp(expression);
+
+        if(tName.length <3 || tName.length > 20){
+            errors.name="The name should be min 3 and max 20 characters long."
+        }
+
+        if(!regex.test(tLongUrl)){
+            errors.longUrl = 'Invalid Long URL'
+        }
+
+        if(!!Object.keys(errors).length > 0){
+            return setErrors(errors);
+        }
+        setLoading(true);
+        try{
+            setTimeout(() =>createShortenLink(tName, tLongUrl, tCustomUrl),1000)
+        }
+        catch(err){
+            setLoading(false);
+        }
+        
     }
 
   return (
@@ -31,16 +62,18 @@ const ShortenURLModal = ({handleClose, createShortenLink}) => {
         </DialogTitle>
         <DialogContent>
             <Box mb={3}>
-                <TextField value={form.name} name="name" onChange={handleChange} fullWidth variant="filled" label="Name"/>
+                <TextField 
+               error={!!errors.name} helperText={errors.name} value={form.name} name="name" onChange={handleChange} fullWidth variant="filled" label="Name"/>
             </Box>
             <Box mb={3}>
-                <TextField value={form.longUrl} name="longUrl" onChange={handleChange} fullWidth variant="filled" label="Long URL"/>
+                <TextField error={!!errors.longUrl} helperText={errors.longUrl}
+                value={form.longUrl} name="longUrl" onChange={handleChange} fullWidth variant="filled" label="Long URL"/>
             </Box>
             <TextField value={form.customUrl} name="customUrl" onChange={handleChange} fullWidth variant="filled" label="Custom URL (optional)"/>
         </DialogContent>
         <DialogActions>
             <Box mr={2} my={1}>
-                <Button onClick={handleSubmit} color="primary" variant="contained" disableElevation>Create</Button>
+                <Button onClick={handleSubmit} color="primary" variant="contained" disableElevation disabled={loading}>{loading ? <CircularProgress size={22} color="inherit"/>: "Create"}</Button>
             </Box>
         </DialogActions>
     </Dialog>
