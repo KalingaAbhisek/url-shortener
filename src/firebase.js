@@ -19,9 +19,9 @@ var firebaseConfig = {
   const firestore=firebase.firestore();
   const auth=firebase.auth();
 
-  if(process.env.NODE_ENV==='development'){
-    firestore.useEmulator('localhost',8080);
-    auth.useEmulator('http://127.0.0.1:9099')
-  }
+  // if(process.env.NODE_ENV==='development'){
+  //   firestore.useEmulator('localhost',8080);
+  //   auth.useEmulator('http://127.0.0.1:9099')
+  // }
 
   export {firebase, firestore, auth, app}

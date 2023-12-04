@@ -54,7 +54,9 @@ const Account = () => {
     const resp = await linksPathRef.add(link);
 
     const newLink= {
-      longUrl: longUrl,
+      longUrl: longUrl.includes("http://") || longUrl.includes("https://")
+      ? longUrl
+      : `http://${longUrl}`,
       userId: userId,
       linkId: resp.id,
     }
